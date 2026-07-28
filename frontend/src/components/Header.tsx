@@ -1,10 +1,23 @@
 import { motion } from 'framer-motion';
-import { Download, MapPin, Smartphone, Mail, Linkedin, Github, User, Terminal } from 'lucide-react';
+import { Download, MapPin, Smartphone, Mail, User, Terminal } from 'lucide-react';
+
+const GithubIcon = ({ size = 16, className = "" }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.2c3-.3 6-1.5 6-6.5a5.5 5.5 0 0 0-1.5-3.8 5.5 5.5 0 0 0-.1-3.8s-1.2-.4-3.9 1.4a12.8 12.8 0 0 0-7 0C6.2 1.2 5 1.6 5 1.6a5.5 5.5 0 0 0-.1 3.8A5.5 5.5 0 0 0 3 9.2c0 5 3 6.2 6 6.5a4.8 4.8 0 0 0-1 3.2v4"></path>
+  </svg>
+);
+
+const LinkedinIcon = ({ size = 16, className = "" }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+    <rect width="4" height="12" x="2" y="9"></rect>
+    <circle cx="4" cy="4" r="2"></circle>
+  </svg>
+);
 
 export function Header() {
   return (
     <header className="max-w-5xl mx-auto mb-16 mt-12 px-6">
-      {/* Nome e Botão de PDF */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6">
         <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>
           <h1 className="text-5xl md:text-6xl font-extrabold text-slate-100 tracking-tight mb-2">
@@ -26,7 +39,6 @@ export function Header() {
         </motion.button>
       </div>
 
-      {/* Badges de Contato (Modernos) */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
         className="flex flex-wrap gap-3 mb-12"
@@ -36,8 +48,8 @@ export function Header() {
           { icon: <Smartphone size={16} />, text: '(47) 99662-3051' },
           { icon: <User size={16} />, text: '23 anos' },
           { icon: <Mail size={16} />, text: 'mateuslinhares16@gmail.com', link: 'mailto:mateuslinhares16@gmail.com' },
-          { icon: <Linkedin size={16} />, text: 'LinkedIn', link: 'https://linkedin.com/in/mateus-linhares-942271204' },
-          { icon: <Github size={16} />, text: 'GitHub', link: 'https://github.com/MateusLinhares-Dev' },
+          { icon: <LinkedinIcon size={16} />, text: 'LinkedIn', link: 'https://linkedin.com/in/mateus-linhares-942271204' },
+          { icon: <GithubIcon size={16} />, text: 'GitHub', link: 'https://github.com/MateusLinhares-Dev' },
         ].map((item, idx) => (
           item.link ? (
             <a key={idx} href={item.link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-slate-900/50 border border-slate-800 px-4 py-2 rounded-lg text-slate-400 hover:text-blue-400 hover:border-blue-500/50 transition-colors text-sm">
@@ -51,7 +63,6 @@ export function Header() {
         ))}
       </motion.div>
 
-      {/* Resumo Profissional */}
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="mb-10">
         <h3 className="text-2xl font-bold text-slate-100 mb-6 flex items-center gap-3">
           <div className="h-[2px] w-8 bg-blue-500 rounded"></div>
