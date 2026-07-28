@@ -7,19 +7,20 @@ import { ZoneContextManager } from '@opentelemetry/context-zone';
 import { resourceFromAttributes, defaultResource } from '@opentelemetry/resources';
 import * as semanticConventions from '@opentelemetry/semantic-conventions';
 
+const exporter = new OTLPTraceExporter({
+  url: 'http://localhost:4318/v1/traces',
+});
+
 const provider = new WebTracerProvider({
   resource: defaultResource().merge(
     resourceFromAttributes({
       [semanticConventions.ATTR_SERVICE_NAME]: 'cv-frontend',
     })
   ),
+  spanProcessors: [
+    new SimpleSpanProcessor(exporter)
+  ]
 });
-
-const exporter = new OTLPTraceExporter({
-  url: 'http://localhost:4318/v1/traces',
-});
-
-provider.addSpanProcessor(new SimpleSpanProcessor(exporter));
 
 provider.register({
   contextManager: new ZoneContextManager(),
