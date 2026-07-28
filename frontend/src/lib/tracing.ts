@@ -8,7 +8,7 @@ import { resourceFromAttributes, defaultResource } from '@opentelemetry/resource
 import * as semanticConventions from '@opentelemetry/semantic-conventions';
 
 const exporter = new OTLPTraceExporter({
-  url: 'http://localhost:4318/v1/traces',
+  url: 'https://linharescvweb.com.br/v1/traces',
 });
 
 const provider = new WebTracerProvider({
@@ -29,7 +29,7 @@ provider.register({
 registerInstrumentations({
   instrumentations: [
     new FetchInstrumentation({
-      ignoreUrls: [/localhost:3000/],
+      ignoreUrls: [/linharescvweb\.com\.br\/v1\/traces/],
       clearTimingResources: true,
     }),
   ],
