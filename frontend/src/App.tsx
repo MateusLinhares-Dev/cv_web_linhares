@@ -1,8 +1,8 @@
-import { Header } from './components/Header';
-import { TechStack } from './components/TechStack';
-import { Experience } from './components/Experience';
-import { ProjectList } from './features/projects/ProjectList';
-import { ContactSection } from './components/ContactSection';
+import { Header } from './components/Header.tsx';
+import { TechStack } from './components/TechStack.tsx';
+import { Experience } from './components/Experience.tsx';
+import { ProjectList } from './features/projects/ProjectList.tsx';
+import { ContactSection } from './components/ContactSection.tsx';
 
 export default function App() {
   return (
