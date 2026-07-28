@@ -1,0 +1,27 @@
+name: Deploy to Hostinger VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Conectando no servidor e atualizando os containers
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            # 1. Entra na pasta do projeto na VPS
+            cd ~/cv_web_linhares
+            
+            # 2. Baixa o código mais recente que você acabou de comitar
+            git pull origin main
+            
+            # 3. Recria os containers Docker que sofreram alterações
+            docker compose up -d --build

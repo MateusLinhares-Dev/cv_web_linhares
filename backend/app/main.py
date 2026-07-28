@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes import curriculo
 from app.api.routes import feedback
+from app.api.routes import contact
 
 app = FastAPI(
     title="Currículo API",
@@ -19,8 +20,8 @@ app.add_middleware(
 )
 
 app.include_router(curriculo.router)
-
 app.include_router(feedback.router, tags=["feedback"])
+app.include_router(contact.router, tags=["contact"])
 
 @app.get("/health")
 def health_check():
