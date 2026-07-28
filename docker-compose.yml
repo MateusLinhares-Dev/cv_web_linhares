@@ -50,6 +50,18 @@ services:
     networks:
       - cv-network
 
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: cv_jaeger
+    ports:
+      - "16686:16686"
+      - "4317:4317"
+      - "4318:4318"
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    networks:
+      - cv-network
+
 networks:
   cv-network:
     driver: bridge

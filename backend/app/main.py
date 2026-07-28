@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes import curriculo
 from app.api.routes import feedback
 from app.api.routes import contact
+from app.core.tracing import setup_tracing
 
 app = FastAPI(
     title="Currículo API",
@@ -18,6 +19,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+setup_tracing(app)
 
 app.include_router(curriculo.router)
 app.include_router(feedback.router, tags=["feedback"])
