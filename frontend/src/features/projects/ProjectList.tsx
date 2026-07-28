@@ -9,7 +9,7 @@ export function ProjectList() {
   if (error) return <div className="text-center text-red-400 py-10">{error}</div>;
 
   return (
-    <section className="max-w-5xl mx-auto my-16 px-6">
+    <section className="max-w-5xl mx-auto my-16 px-6" id="projetos">
       <h2 className="text-3xl font-bold text-slate-100 mb-8 flex items-center gap-3">
         <div className="h-[2px] w-8 bg-blue-500 rounded"></div>
         Projetos em Destaque
@@ -22,12 +22,12 @@ export function ProjectList() {
             target="_blank" 
             rel="noopener noreferrer"
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             transition={{ delay: index * 0.1 }}
             key={repo.name} 
             className="group block bg-slate-900/40 border border-slate-800 p-6 rounded-2xl hover:bg-slate-800/60 hover:border-blue-500/50 transition-all duration-300 relative overflow-hidden"
           >
-
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
             
             <div className="flex justify-between items-start mb-4 relative z-10">
