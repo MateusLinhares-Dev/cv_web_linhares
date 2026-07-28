@@ -4,12 +4,12 @@ import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
 import { registerInstrumentations } from '@opentelemetry/instrumentation';
 import { FetchInstrumentation } from '@opentelemetry/instrumentation-fetch';
 import { ZoneContextManager } from '@opentelemetry/context-zone';
-import { Resource } from '@opentelemetry/resources';
-import { ATTR_SERVICE_NAME } from '@opentelemetry/semantic-conventions';
+import * as resources from '@opentelemetry/resources';
+import * as semanticConventions from '@opentelemetry/semantic-conventions';
 
 const provider = new WebTracerProvider({
-  resource: new Resource({
-    [ATTR_SERVICE_NAME]: 'cv-frontend',
+  resource: new resources.Resource({
+    [semanticConventions.ATTR_SERVICE_NAME]: 'cv-frontend',
   }),
 });
 
