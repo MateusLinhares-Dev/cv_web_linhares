@@ -19,6 +19,5 @@ jobs:
           script: |
             cd ~/cv_web_linhares
             git pull origin main
-            docker compose up -d --build
-            docker restart cv_nginx
-      
+            docker compose up -d --build -V --remove-orphans
+            docker image prune -a -f
