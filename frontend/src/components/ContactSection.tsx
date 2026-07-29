@@ -1,99 +1,140 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Send, CheckCircle2 } from 'lucide-react';
+import { Turnstile } from '@marsidev/react-turnstile';
 
 export function ContactSection() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [cfToken, setCfToken] = useState<string>('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+
+  const apiUrl = import.meta.env.VITE_API_URL || 'https://linharescvweb.com.br/api';
+  const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY || '';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setStatus('loading');
     
+    if (!cfToken) {
+      alert("⚠️ Aguarde a verificação de segurança (Anti-Bot).");
+      return;
+    }
+
+    setStatus('loading');
+
     try {
-      const res = await fetch('/api/contact', {
+      const response = await fetch(`${apiUrl}/contact`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+          cf_token: cfToken
+        }),
       });
-      
-      if (res.ok) {
-        setStatus('success');
-        setFormData({ name: '', email: '', message: '' });
-      } else {
-        setStatus('error');
+
+      if (!response.ok) {
+        throw new Error('Falha ao enviar a mensagem.');
       }
+
+      setStatus('success');
+      setFormData({ name: '', email: '', message: '' });
+      setCfToken('');
     } catch (error) {
+      console.error(error);
       setStatus('error');
     }
   };
 
   return (
-    <section className="max-w-3xl mx-auto my-16 px-6">
-      <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-        <h2 className="text-3xl font-bold text-slate-100 mb-8 flex items-center gap-3">
-          <div className="h-[2px] w-8 bg-blue-500 rounded"></div>
-          Vamos conversar?
-        </h2>
+    <section id="contact" className="py-20 bg-[#020617]">
+      <div className="max-w-3xl mx-auto px-6">
+        <h2 className="text-3xl font-bold mb-8 text-white">Vamos conversar?</h2>
+        
+        {status === 'success' ? (
+          <div className="p-6 bg-green-500/10 border border-green-500/20 rounded-xl text-center">
+            <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-green-500 text-2xl">✓</span>
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2">Mensagem Enviada!</h3>
+            <p className="text-slate-400 mb-6">Recebi seu contato e responderei o mais rápido possível.</p>
+            <button 
+              onClick={() => setStatus('idle')}
+              className="text-blue-400 hover:text-blue-300 transition-colors"
+            >
+              Enviar nova mensagem
+            </button>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium text-slate-400 mb-2">Nome</label>
+              <input
+                id="name"
+                type="text"
+                required
+                minLength={2}
+                maxLength={80}
+                className="w-full px-4 py-3 bg-slate-900/50 border border-slate-800 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-white transition-all"
+                value={formData.name}
+                onChange={(e) => setFormData({...formData, name: e.target.value})}
+              />
+            </div>
+            
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-slate-400 mb-2">E-mail</label>
+              <input
+                id="email"
+                type="email"
+                required
+                className="w-full px-4 py-3 bg-slate-900/50 border border-slate-800 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-white transition-all"
+                value={formData.email}
+                onChange={(e) => setFormData({...formData, email: e.target.value})}
+              />
+            </div>
+            
+            <div>
+              <label htmlFor="message" className="block text-sm font-medium text-slate-400 mb-2">Mensagem</label>
+              <textarea
+                id="message"
+                required
+                minLength={10}
+                maxLength={1500}
+                rows={5}
+                className="w-full px-4 py-3 bg-slate-900/50 border border-slate-800 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-white transition-all resize-none"
+                value={formData.message}
+                onChange={(e) => setFormData({...formData, message: e.target.value})}
+              />
+            </div>
 
-        <div className="bg-slate-900/40 border border-slate-800 p-8 rounded-2xl">
-          {status === 'success' ? (
-            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center justify-center py-12 text-center">
-              <CheckCircle2 className="w-16 h-16 text-green-500 mb-4" />
-              <h3 className="text-2xl font-bold text-slate-100 mb-2">Mensagem Enviada!</h3>
-              <p className="text-slate-400">Recebi seu contato e responderei o mais rápido possível.</p>
-              <button onClick={() => setStatus('idle')} className="mt-6 text-blue-400 hover:text-blue-300 underline">Enviar nova mensagem</button>
-            </motion.div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-400">Nome</label>
-                  <input 
-                    required 
-                    className="w-full bg-slate-950 border border-slate-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 p-3 rounded-lg text-slate-100 outline-none transition-all" 
-                    placeholder="John Doe" 
-                    value={formData.name} 
-                    onChange={e => setFormData({...formData, name: e.target.value})} 
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-400">E-mail corporativo</label>
-                  <input 
-                    required 
-                    type="email"
-                    className="w-full bg-slate-950 border border-slate-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 p-3 rounded-lg text-slate-100 outline-none transition-all" 
-                    placeholder="john@empresa.com" 
-                    value={formData.email} 
-                    onChange={e => setFormData({...formData, email: e.target.value})} 
-                  />
-                </div>
-              </div>
-              
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-400">Mensagem</label>
-                <textarea 
-                  required 
-                  className="w-full bg-slate-950 border border-slate-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 p-3 rounded-lg text-slate-100 outline-none transition-all h-32 resize-none" 
-                  placeholder="Como posso te ajudar?" 
-                  value={formData.message} 
-                  onChange={e => setFormData({...formData, message: e.target.value})} 
-                />
-              </div>
+            <div className="flex justify-center">
+              <Turnstile
+                siteKey={siteKey}
+                options={{
+                  theme: 'dark',
+                  language: 'pt-br',
+                }}
+                onSuccess={(token) => setCfToken(token)}
+                onError={() => setStatus('error')}
+              />
+            </div>
 
-              <button 
-                type="submit" 
-                disabled={status === 'loading'}
-                className="w-full md:w-auto px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
-              >
-                {status === 'loading' ? 'Enviando...' : (
-                  <>Enviar Mensagem <Send size={18} /></>
-                )}
-              </button>
-            </form>
-          )}
-        </div>
-      </motion.div>
+            {status === 'error' && (
+              <p className="text-red-400 text-sm text-center">
+                Ocorreu um erro. Verifique sua conexão ou tente novamente mais tarde.
+              </p>
+            )}
+
+            <button
+              type="submit"
+              disabled={status === 'loading' || !cfToken}
+              className="w-full py-4 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-800 disabled:text-slate-500 text-white font-bold rounded-lg transition-all"
+            >
+              {status === 'loading' ? 'Enviando...' : 'Enviar Mensagem'}
+            </button>
+          </form>
+        )}
+      </div>
     </section>
   );
 }
