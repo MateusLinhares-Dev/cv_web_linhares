@@ -27,7 +27,7 @@ export function Experience() {
                 </div>
                 <div className="flex items-center gap-2 text-slate-500 text-sm mt-2 md:mt-0 bg-slate-900 border border-slate-800 px-3 py-1 rounded-full w-fit">
                   <Calendar size={14} />
-                  <span>5 anos de experiência</span>
+                  <span>4 anos de experiência</span>
                 </div>
               </div>
 
